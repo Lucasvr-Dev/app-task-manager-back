@@ -2,22 +2,27 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
- 
+
 const app = express();
- 
+
 app.use(cors({
-  origin: 'https://lucasvr-dev.github.io'
+  origin: '*'
 }));
+
 app.use(express.json());
- 
-app.get('/', (req, res) => res.json({ message: 'API do Diário Pet funcionando.' }));
- 
-app.use('/api/entries', require('./routes/diaryRoutes'));
-app.use('/api/pets', require('./routes/petRoutes'));
- 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/pet_diary')
-  .then(() =>
-    app.listen(process.env.PORT || 3000, () =>
-      console.log(`Servidor rodando`)
-    )
-  );
+
+app.get('/', (req, res) => {
+  res.json({ message: 'API Task Manager funcionando' });
+});
+
+app.use('/api/tasks', require('./routes/taskRoutes'));
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    app.listen(process.env.PORT || 3000, () => {
+      console.log('Servidor rodando');
+    });
+  })
+  .catch((err) => {
+    console.log('Erro ao conectar no MongoDB:', err);
+  });
