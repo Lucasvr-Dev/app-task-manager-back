@@ -1,28 +1,23 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
 
-app.use(cors({
-  origin: '*'
-}));
 
+app.use(cors());
 app.use(express.json());
 
+
+const taskRoutes = require('./routes/taskRoutes');
+app.use('/api/tasks', taskRoutes);
+
+
 app.get('/', (req, res) => {
-  res.json({ message: 'API Task Manager funcionando' });
+  res.send('API rodando 🚀');
 });
 
-app.use('/api/tasks', require('./routes/taskRoutes'));
+const PORT = process.env.PORT || 3000;
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    app.listen(process.env.PORT || 3000, () => {
-      console.log('Servidor rodando');
-    });
-  })
-  .catch((err) => {
-    console.log('Erro ao conectar no MongoDB:', err);
-  });
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
